@@ -1,0 +1,12 @@
+﻿<Window x:Class="NeuroServer.v2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="351.064" Width="374.645">
+    <StackPanel>
+        <TextBox x:Name="PortTextBox" Height="30" Text="52200"/>
+        <Button x:Name="StartButton" Height="30" Content="Start" Click="StartButton_Click"/>
+        <Button x:Name="StopButton" Height="30" Content="Stop" Click="StopButton_Click"/>
+        <TextBox x:Name="Log" Height="230"  />
+
+    </StackPanel>
+</Window>

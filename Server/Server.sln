@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BBDB1089-7244-40DF-B770-C849DC51932B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroServer.v2", "NeuroServer.v2\NeuroServer.v2.csproj", "{F3C8A89C-28CE-4FC7-B981-33AC45E32E76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UDP", "UDP\UDP.csproj", "{A310FAD7-88A8-4463-A3B1-DE2CDF903793}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F3C8A89C-28CE-4FC7-B981-33AC45E32E76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3C8A89C-28CE-4FC7-B981-33AC45E32E76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3C8A89C-28CE-4FC7-B981-33AC45E32E76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3C8A89C-28CE-4FC7-B981-33AC45E32E76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A310FAD7-88A8-4463-A3B1-DE2CDF903793}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A310FAD7-88A8-4463-A3B1-DE2CDF903793}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A310FAD7-88A8-4463-A3B1-DE2CDF903793}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A310FAD7-88A8-4463-A3B1-DE2CDF903793}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
