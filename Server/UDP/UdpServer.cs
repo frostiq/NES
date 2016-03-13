@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 
 namespace NeuroServer.Udp
 {
-    public class Server: IDisposable
+    public class UdpServer: IDisposable
     {
-        public event Func<object, object> OnProcess;
+        public event Func<byte[], byte[]> OnProcess;
 
         private UdpClient _udp;
         private Task _listenTask;
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        private readonly BinarySerializer _serializer = new BinarySerializer();
 
         public void Init(int port)
         {
@@ -44,17 +43,12 @@ namespace NeuroServer.Udp
             {
                 IPEndPoint endPoint = null;
                 var request = _udp.Receive(ref endPoint);
-                var response = RawProcess(request, endPoint);
-                _udp.Send(response, response.Length, endPoint);
+                var response = OnProcess?.Invoke(request);
+
+                if (response != null)
+                    _udp.Send(response, response.Length, endPoint);
             }
             _udp.Close();
-        }
-
-        private byte[] RawProcess(byte[] bytes, IPEndPoint endPoint)
-        {
-            var obj = _serializer.Deserialize<object>(bytes);
-            var res = OnProcess(obj);
-            return _serializer.Serialize(res);            
         }
     }
 }

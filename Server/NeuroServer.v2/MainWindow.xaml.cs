@@ -8,25 +8,25 @@ namespace NeuroServer.v2
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly Server _server = (Server) Application.Current.Resources["Server"];
+        private readonly UdpServer _udpServer = (UdpServer) Application.Current.Resources["Server"];
 
         public MainWindow()
         {
             InitializeComponent();
 
-            _server.OnProcess += obj => obj;
-            _server.Init(int.Parse(PortTextBox.Text));
+            new EnvironmentMessageProcessor().AttachToServer(_udpServer);
+            _udpServer.Init(int.Parse(PortTextBox.Text));
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            _server.Start();
+            _udpServer.Start();
             Log.AppendText("\nServer Started");
         }
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
-            _server.Stop();
+            _udpServer.Stop();
             Log.AppendText("\nServer Stopped");
         }
     }

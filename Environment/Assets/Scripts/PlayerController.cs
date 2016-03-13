@@ -1,55 +1,67 @@
-﻿using UnityEngine;
+﻿using System.Net;
+using Assets.Scripts.Lib;
+using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerController : MonoBehaviour
+namespace Assets.Scripts
 {
-    public float Speed;
-    public Text CountText;
-    public Text WinText;
-
-    private Rigidbody Rigidbody { get; set; }
-
-    private int _count;
-
-
-    void Start()
+    public class PlayerController : MonoBehaviour
     {
-        Rigidbody = GetComponent<Rigidbody>();
-        Count = 0;
-    }
+        public float Speed;
+        public Text CountText;
+        public Text WinText;
+        public Camera Eyes;
 
-    void FixedUpdate()
-    {
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        float moveVertical = Input.GetAxis("Vertical");
+        private new Rigidbody rigidbody;
+        private int _count;
+        private ScreenshootMaker screenshootMaker;
+        private ServerGates serverGates;
+        private readonly IPEndPoint serverEndpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 52200);
+        private int listenPort = 10016;
 
-        var movement = new Vector3(moveHorizontal, 0f, moveVertical);
 
-        Rigidbody.AddForce(movement * Speed);
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Pick Up"))
+        void Start()
         {
-            other.gameObject.SetActive(false);
-            ++Count;
+            rigidbody = GetComponent<Rigidbody>();
+            Count = 0;
+            screenshootMaker = new ScreenshootMaker(new Resolution {width = 256, height = 64});
+            serverGates = new ServerGates(serverEndpoint, listenPort);
         }
-    }
 
-    private int Count
-    {
-        get { return _count; }
-        set
+        void FixedUpdate()
         {
-            _count = value;
+            serverGates.UpdateAnimat(rigidbody);
+        }
 
-            CountText.text = "Count: " + value;
+        void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.CompareTag("Pick Up"))
+            {
+                other.gameObject.SetActive(false);
+                ++Count;
+            }
+        }
 
-            if (value == 0)
-                WinText.text = string.Empty;
-            else if (value >= 12)
-                WinText.text = "You Win!";
+        void LateUpdate()
+        {
+            var screenshoot = screenshootMaker.TakeScreenshoot(Eyes);
+            serverGates.SendPicture(screenshoot.CompressIntoGzip());
+        }
+
+        private int Count
+        {
+            get { return _count; }
+            set
+            {
+                _count = value;
+
+                CountText.text = "Count: " + value;
+
+                if (value == 0)
+                    WinText.text = string.Empty;
+                else if (value >= 12)
+                    WinText.text = "You Win!";
+            }
         }
     }
 }

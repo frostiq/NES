@@ -5,21 +5,19 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{BB9DA0A5-7B5C-9365-B6D3-4DA0CA0F60C2}</ProjectGuid>
+    <ProjectGuid>{34C75DDF-72A9-B33E-D236-9A010F70CE7D}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
-    <UnityProjectType>Game:1</UnityProjectType>
+    <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
+    <CompilerResponseFile></CompilerResponseFile>
+    <UnityProjectType>Editor:5</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>5.3.3f1</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -54,52 +52,51 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Advertisements">
+      <HintPath>Library\UnityAssemblies\UnityEditor.Advertisements.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>Library\UnityAssemblies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.EditorTestsRunner">
+      <HintPath>Library\UnityAssemblies\UnityEditor.EditorTestsRunner.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UI">
+      <HintPath>Library\UnityAssemblies\UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor">
-      <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
+    <Reference Include="UnityEditor.Networking">
+      <HintPath>Library\UnityAssemblies\UnityEditor.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.TreeEditor">
+      <HintPath>Library\UnityAssemblies\UnityEditor.TreeEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Graphs">
+      <HintPath>Library\UnityAssemblies\UnityEditor.Graphs.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.WindowsStandalone.Extensions">
+      <HintPath>Library\UnityAssemblies\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
+      <HintPath>Library\UnityAssemblies\SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Common\BinarySerializer.cs" />
-    <Compile Include="Assets\Common\Deltas.cs" />
-    <Compile Include="Assets\Common\ISerializer.cs" />
-    <Compile Include="Assets\Scripts\CameraController.cs" />
-    <Compile Include="Assets\Scripts\Lib\ByteArrayExtensions.cs" />
-    <Compile Include="Assets\Scripts\Lib\ScreenshootMaker.cs" />
-    <Compile Include="Assets\Scripts\Lib\ServerGates.cs" />
-    <Compile Include="Assets\Scripts\PlayerController.cs" />
-    <Compile Include="Assets\Scripts\Rotator.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\BlockType.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\CompressionMode.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\CopyEncoder.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\Crc32Helper.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\DeflateInput.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\DeflateStream.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\DeflateStreamAsyncResult.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\DeflaterManaged.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\FastEncoder.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\FastEncoderStatics.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\FastEncoderWindow.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\FileFormats.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\GZipDecoder.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\GZipStream.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\GZipUtils.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\HuffmanTree.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\IDeflater.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\Inflater.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\InflaterState.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\InputBuffer.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\InvalidDataException.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\Match.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\MatchState.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\OutputBuffer.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\OutputWindow.cs" />
-    <Compile Include="Assets\Unity.IO.Compression\SR.cs" />
+    <ProjectReference Include="Environment.CSharp.csproj">
+      <Project>{BB9DA0A5-7B5C-9365-B6D3-4DA0CA0F60C2}</Project>
+      <Name>Environment.CSharp</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Assets\Editor\NewEditorTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

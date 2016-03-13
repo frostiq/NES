@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 
-public class Rotator : MonoBehaviour
+namespace Assets.Scripts
 {
-    // Update is called once per frame
-    void Update()
+    public class Rotator : MonoBehaviour
     {
-        transform.Rotate(new Vector3(15, 30, 45) * Time.deltaTime);
+        // Update is called once per frame
+        void Update()
+        {
+            transform.Rotate(new Vector3(15, 30, 45) * Time.deltaTime);
+        }
     }
 }

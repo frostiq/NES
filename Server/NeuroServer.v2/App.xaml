@@ -4,6 +4,6 @@
              xmlns:neuro ="clr-namespace:NeuroServer.Udp;assembly=UDP"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <neuro:Server x:Key="Server"/>
+        <neuro:UdpServer x:Key="Server"/>
     </Application.Resources>
 </Application>
