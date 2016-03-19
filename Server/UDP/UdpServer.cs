@@ -3,17 +3,18 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using NLog;
 
 namespace NeuroServer.Udp
 {
     public class UdpServer: IDisposable
     {
         public event Func<byte[], byte[]> OnProcess;
-        public event Action<Exception> OnException; 
 
         private UdpClient _udp;
         private Task _listenTask;
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private readonly ILogger _log = LogManager.GetLogger("Server");
 
         public void Init(int port)
         {
@@ -46,15 +47,19 @@ namespace NeuroServer.Udp
                 {
                     IPEndPoint endPoint = null;
                     var request = _udp.Receive(ref endPoint);
+                    _log.Info("Message recieved");
+
                     var response = OnProcess?.Invoke(request);
 
                     if (response != null)
                         _udp.Send(response, response.Length, endPoint);
+
+                    _log.Info("Message sent");
                 }
             }
             catch (Exception e)
             {
-                OnException?.Invoke(e);
+                _log.Error(e);
             }
             finally
             {

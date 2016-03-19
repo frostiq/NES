@@ -26,17 +26,17 @@ namespace Assets.Scripts.Lib
         public void SendPicture(byte[] data)
         {
             _udp.Send(data, data.Length);
-            //_asyncResult = _udp.BeginReceive(null, null);
+            _asyncResult = _udp.BeginReceive(null, null);
         }
 
         public void UpdateAnimat(Rigidbody rigidbody)
         {
-            //if (_asyncResult != null)
+            if (_asyncResult != null && _asyncResult.AsyncWaitHandle.WaitOne(TimeSpan.FromMilliseconds(500)))
             {
-                //var bytes = _udp.EndReceive(_asyncResult, ref _fakeEndPoint);
-                var bytes = _udp.Receive(ref _fakeEndPoint);
+                var bytes = _udp.EndReceive(_asyncResult, ref _fakeEndPoint);
                 if(_fakeEndPoint.Equals(_serverEndPoint))
                    UpdateAnimat(rigidbody, bytes);
+                _asyncResult = null;
             }
         }
 
