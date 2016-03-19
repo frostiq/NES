@@ -11,12 +11,12 @@ namespace NeuroServer.Udp
     {
         public event Func<byte[], byte[]> OnProcess;
 
-        private UdpClient _udp;
-        private Task _listenTask;
+        private readonly UdpClient _udp;
+        private readonly Task _listenTask;
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private readonly ILogger _log = LogManager.GetLogger("Server");
 
-        public void Init(int port)
+        public UdpServer(int port)
         {
             _udp = new UdpClient(port);
             var token = _cancellationTokenSource.Token;
@@ -26,11 +26,13 @@ namespace NeuroServer.Udp
         public void Start()
         {
             _listenTask.Start();
+            _log.Info("Server started");
         }
 
         public void Stop()
         {
             _cancellationTokenSource.Cancel();
+            _log.Info("Server stopped");
         }
 
         public void Dispose()
@@ -47,14 +49,14 @@ namespace NeuroServer.Udp
                 {
                     IPEndPoint endPoint = null;
                     var request = _udp.Receive(ref endPoint);
-                    _log.Info("Message recieved");
+                    _log.Debug("Message recieved");
 
                     var response = OnProcess?.Invoke(request);
 
                     if (response != null)
                         _udp.Send(response, response.Length, endPoint);
 
-                    _log.Info("Message sent");
+                    _log.Debug("Message sent");
                 }
             }
             catch (Exception e)

@@ -24,13 +24,19 @@ namespace Assets.Scripts
         {
             rigidbody = GetComponent<Rigidbody>();
             Count = 0;
-            screenshootMaker = new ScreenshootMaker(new Resolution {width = 256, height = 64});
+            screenshootMaker = new ScreenshootMaker(new Resolution { width = 256, height = 64 });
             serverGates = new ServerGates(serverEndpoint, listenPort);
         }
 
         void FixedUpdate()
         {
             serverGates.UpdateAnimat(rigidbody);
+        }
+
+        void LateUpdate()
+        {
+            var screenshoot = screenshootMaker.TakeScreenshoot(Eyes);
+            serverGates.SendPicture(screenshoot);
         }
 
         void OnTriggerEnter(Collider other)
@@ -40,12 +46,6 @@ namespace Assets.Scripts
                 other.gameObject.SetActive(false);
                 ++Count;
             }
-        }
-
-        void LateUpdate()
-        {
-            var screenshoot = screenshootMaker.TakeScreenshoot(Eyes);
-            serverGates.SendPicture(screenshoot.CompressIntoGzip());
         }
 
         private int Count

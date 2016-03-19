@@ -1,9 +1,0 @@
-﻿<Application x:Class="NeuroServer.v2.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:neuro ="clr-namespace:NeuroServer.Udp;assembly=UDP"
-             StartupUri="MainWindow.xaml">
-    <Application.Resources>
-        <neuro:UdpServer x:Key="Server"/>
-    </Application.Resources>
-</Application>

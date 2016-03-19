@@ -68,8 +68,8 @@
     <Compile Include="Assets\Common\BinarySerializer.cs" />
     <Compile Include="Assets\Common\Deltas.cs" />
     <Compile Include="Assets\Common\ISerializer.cs" />
+    <Compile Include="Assets\Common\Timing.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
-    <Compile Include="Assets\Scripts\Lib\ByteArrayExtensions.cs" />
     <Compile Include="Assets\Scripts\Lib\ScreenshootMaker.cs" />
     <Compile Include="Assets\Scripts\Lib\ServerGates.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
