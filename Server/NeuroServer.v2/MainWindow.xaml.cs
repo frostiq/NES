@@ -15,6 +15,7 @@ namespace NeuroServer.v2
             InitializeComponent();
 
             new EnvironmentMessageProcessor().AttachToServer(_udpServer);
+            _udpServer.OnException += exception => Log.AppendText(exception.ToString());
             _udpServer.Init(int.Parse(PortTextBox.Text));
         }
 

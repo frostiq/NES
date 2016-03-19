@@ -9,6 +9,7 @@ namespace NeuroServer.Udp
     public class UdpServer: IDisposable
     {
         public event Func<byte[], byte[]> OnProcess;
+        public event Action<Exception> OnException; 
 
         private UdpClient _udp;
         private Task _listenTask;
@@ -39,16 +40,26 @@ namespace NeuroServer.Udp
 
         private void Listen(CancellationToken token)
         {
-            while (!token.IsCancellationRequested)
+            try
             {
-                IPEndPoint endPoint = null;
-                var request = _udp.Receive(ref endPoint);
-                var response = OnProcess?.Invoke(request);
+                while (!token.IsCancellationRequested)
+                {
+                    IPEndPoint endPoint = null;
+                    var request = _udp.Receive(ref endPoint);
+                    var response = OnProcess?.Invoke(request);
 
-                if (response != null)
-                    _udp.Send(response, response.Length, endPoint);
+                    if (response != null)
+                        _udp.Send(response, response.Length, endPoint);
+                }
             }
-            _udp.Close();
+            catch (Exception e)
+            {
+                OnException?.Invoke(e);
+            }
+            finally
+            {
+                _udp.Close();
+            }
         }
     }
 }

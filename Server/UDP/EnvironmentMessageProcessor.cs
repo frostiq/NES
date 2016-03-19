@@ -11,7 +11,5 @@ namespace NeuroServer.Udp
         {
             server.OnProcess += bytes => _serializer.Serialize(new Deltas(5f, 0.1f));
         }
-
-
     }
 }
