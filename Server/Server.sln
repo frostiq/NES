@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroServer", "NeuroServer\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroEngine", "NeuroEngine\NeuroEngine.csproj", "{A863A162-5DEB-4AB1-B13C-5B1EBAFDC52C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{8B13FBCF-372D-43E9-BC2E-3819CB568E1D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{A863A162-5DEB-4AB1-B13C-5B1EBAFDC52C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A863A162-5DEB-4AB1-B13C-5B1EBAFDC52C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A863A162-5DEB-4AB1-B13C-5B1EBAFDC52C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B13FBCF-372D-43E9-BC2E-3819CB568E1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B13FBCF-372D-43E9-BC2E-3819CB568E1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B13FBCF-372D-43E9-BC2E-3819CB568E1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B13FBCF-372D-43E9-BC2E-3819CB568E1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

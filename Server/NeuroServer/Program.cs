@@ -10,7 +10,10 @@ namespace NeuroServer
             using (var server = new UdpServer(52200))
             {
                 server.Start();
-                new EnvironmentMessageProcessor().AttachToServer(server);
+                server.OnProcess += bytes =>
+                {
+                    return bytes;
+                };
                 Console.Read();
             }
         }
