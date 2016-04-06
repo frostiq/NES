@@ -6,6 +6,7 @@ using NeuroEngine.Neurons;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 using QuickGraph;
+using Connection = QuickGraph.TaggedEdge<NeuroEngine.Neurons.INeuron, double>;
 
 namespace Tests
 {
@@ -27,9 +28,9 @@ namespace Tests
             var linkWeight = _fixture.Create<double>();
 
             var input = new InputNeuron();
-            var output = new Neuron(new IdentityFunction());
-            var graph = new AdjacencyGraph<AbstractNeuron, TaggedEdge<AbstractNeuron, double>>();
-            graph.AddVerticesAndEdge(new TaggedEdge<AbstractNeuron, double>(input, output, linkWeight));
+            var output = new BasicNeuron(new IdentityFunction());
+            var graph = new AdjacencyGraph<INeuron, Connection>();
+            graph.AddVerticesAndEdge(new Connection(input, output, linkWeight));
             var neuralNetwork = new NeuralNetwork(graph, new []{input}, new []{output});
 
             var res = neuralNetwork.Compute(new[] {1d});
@@ -44,9 +45,9 @@ namespace Tests
             var inputSignal = _fixture.Create<double>();
 
             var input = new InputNeuron();
-            var output = new Neuron(new IdentityFunction());
-            var graph = new AdjacencyGraph<AbstractNeuron, TaggedEdge<AbstractNeuron, double>>();
-            graph.AddVerticesAndEdge(new TaggedEdge<AbstractNeuron, double>(input, output, 1d));
+            var output = new BasicNeuron(new IdentityFunction());
+            var graph = new AdjacencyGraph<INeuron, Connection>();
+            graph.AddVerticesAndEdge(new Connection(input, output, 1d));
             var neuralNetwork = new NeuralNetwork(graph, new[] { input }, new[] { output });
 
             var res = neuralNetwork.Compute(new[] { inputSignal });
@@ -58,31 +59,31 @@ namespace Tests
         [Test]
         public void TestCompute_MultiNeurons()
         {
-            var iToMSignal = _fixture.Create<double>();
-            var mToOSignal = _fixture.Create<double>();
+            var iToMSignal = 1d;
+            var mToOSignal = 2d;
             var inputSignals = new[] {_fixture.Create<double>(), _fixture.Create<double>()};
             var inputs = new[] {new InputNeuron(), new InputNeuron()};
-            var mids = new[] {new Neuron(new IdentityFunction()), new Neuron(new IdentityFunction())};
-            var output = new[] {new Neuron(new IdentityFunction()), new Neuron(new IdentityFunction())};
-            var graph = new AdjacencyGraph<AbstractNeuron, TaggedEdge<AbstractNeuron, double>>();
+            var mids = new[] {new BasicNeuron(new IdentityFunction(), "m1"), new BasicNeuron(new IdentityFunction(), "m2")};
+            var output = new[] {new BasicNeuron(new IdentityFunction(), "o1"), new BasicNeuron(new IdentityFunction(), "o2")};
+            var graph = new AdjacencyGraph<INeuron, Connection>();
             graph.AddVerticesAndEdgeRange(new[]
             {
-                new TaggedEdge<AbstractNeuron, double>(inputs[0], mids[0], iToMSignal),
-                new TaggedEdge<AbstractNeuron, double>(inputs[0], mids[1], iToMSignal),
-                new TaggedEdge<AbstractNeuron, double>(inputs[1], mids[1], iToMSignal),
-                new TaggedEdge<AbstractNeuron, double>(inputs[1], mids[0], iToMSignal),
-                new TaggedEdge<AbstractNeuron, double>(mids[0], output[0], mToOSignal),
-                new TaggedEdge<AbstractNeuron, double>(mids[0], output[1], mToOSignal),
-                new TaggedEdge<AbstractNeuron, double>(mids[1], output[1], mToOSignal),
-                new TaggedEdge<AbstractNeuron, double>(mids[1], output[0], mToOSignal),
+                new Connection(inputs[0], mids[0], iToMSignal),
+                new Connection(inputs[0], mids[1], iToMSignal),
+                new Connection(inputs[1], mids[1], iToMSignal),
+                new Connection(inputs[1], mids[0], iToMSignal),
+                new Connection(mids[0], output[0], mToOSignal),
+                new Connection(mids[0], output[1], mToOSignal),
+                new Connection(mids[1], output[1], mToOSignal),
+                new Connection(mids[1], output[0], mToOSignal),
             });
             var neuralNetwork = new NeuralNetwork(graph, inputs, output);
 
             var res = neuralNetwork.Compute(inputSignals);
 
             res.Should().HaveSameCount(output);
-            res.Should().HaveElementAt(0, 4 * iToMSignal * mToOSignal);
-            res.Should().HaveElementAt(1, 4 * iToMSignal * mToOSignal);
+            res.Should().HaveElementAt(0, 4 * inputSignals.Sum());
+            res.Should().HaveElementAt(1, 4 * inputSignals.Sum());
         }
     }
 }

@@ -5,24 +5,37 @@ using MoreLinq;
 using NeuroEngine.Neurons;
 using QuickGraph;
 using QuickGraph.Algorithms.Search;
+using Connection = QuickGraph.TaggedEdge<NeuroEngine.Neurons.INeuron, double>;
 
 namespace NeuroEngine
 {
     
     public class NeuralNetwork
     {
-        private readonly AdjacencyGraph<AbstractNeuron, TaggedEdge<AbstractNeuron, double>> _network;
+        private readonly AdjacencyGraph<INeuron, Connection> _network;
         private readonly ICollection<InputNeuron> _inputNeurons;
-        private readonly ICollection<Neuron> _outputNeurons;
+        private readonly ICollection<BasicNeuron> _outputNeurons;
+        private readonly BreadthFirstSearchAlgorithm<INeuron, Connection> _algorithm;
 
         public NeuralNetwork
-            (AdjacencyGraph<AbstractNeuron, TaggedEdge<AbstractNeuron, double>> network, 
+            (AdjacencyGraph<INeuron, Connection> network, 
             ICollection<InputNeuron> inputNeurons, 
-            ICollection<Neuron> outputNeurons)
+            ICollection<BasicNeuron> outputNeurons)
         {
             _network = network;
             _outputNeurons = outputNeurons;
             _inputNeurons = inputNeurons;
+
+            var root = new EmptyNeuron();
+            _network.AddVertex(root);
+            foreach (var inputNeuron in _inputNeurons)
+            {
+                _network.AddEdge(new Connection(root, inputNeuron, 0d));
+            }
+
+            _algorithm = new BreadthFirstSearchAlgorithm<INeuron, Connection>(_network);
+            _algorithm.ExamineEdge += AddSignal;
+            _algorithm.SetRootVertex(root);
         }
 
         public ICollection<double> Compute(ICollection<double> input)
@@ -34,9 +47,7 @@ namespace NeuroEngine
 
             Enumerable.Zip(input, _inputNeurons, (d, neuron) => neuron.AddToInput(d)).Consume();
 
-            var alg = new BreadthFirstSearchAlgorithm<AbstractNeuron, TaggedEdge<AbstractNeuron, double>>(_network);
-            alg.ExamineEdge += AddSignal;
-            alg.Compute();
+            _algorithm.Compute();
 
             return _outputNeurons.Select(x => x.Signal).ToList();
         }
@@ -46,7 +57,7 @@ namespace NeuroEngine
             foreach (var neuron in _network.Vertices) neuron.Reset();
         }
 
-        private static void AddSignal(TaggedEdge<AbstractNeuron, double> edge)
+        private void AddSignal(Connection edge)
         {
             edge.Target.AddToInput(edge.Source.Signal * edge.Tag);
         }

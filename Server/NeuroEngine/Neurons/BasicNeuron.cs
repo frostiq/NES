@@ -2,15 +2,16 @@
 
 namespace NeuroEngine.Neurons
 {
-    public class Neuron : AbstractNeuron
+    public class BasicNeuron : NeuronWithInput
     {
         private double? _signal;
 
         private readonly IActivationFunction _activationFunction;
 
-        public Neuron(IActivationFunction activationFunction)
+        public BasicNeuron(IActivationFunction activationFunction, string tag = "")
         {
             _activationFunction = activationFunction;
+            Tag = tag;
         }
 
         public override double Signal
@@ -23,6 +24,12 @@ namespace NeuroEngine.Neurons
                 }
                 return _signal.Value;
             }
+        }
+
+        public override NeuronWithInput AddToInput(double value)
+        {
+            _signal = null;
+            return base.AddToInput(value);
         }
 
         public override void Reset()

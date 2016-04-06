@@ -1,7 +1,11 @@
 ﻿namespace NeuroEngine.Neurons
 {
-    public class InputNeuron : AbstractNeuron
+    public class InputNeuron : NeuronWithInput
     {
+        public InputNeuron(string tag = "") : base(tag)
+        {
+        }
+
         public override double Signal => Input;
     }
 }
