@@ -9,7 +9,6 @@ using Connection = QuickGraph.TaggedEdge<NeuroEngine.Neurons.INeuron, double>;
 
 namespace NeuroEngine
 {
-    
     public class NeuralNetwork
     {
         private readonly AdjacencyGraph<INeuron, Connection> _network;
@@ -57,7 +56,12 @@ namespace NeuroEngine
             foreach (var neuron in _network.Vertices) neuron.Reset();
         }
 
-        private void AddSignal(Connection edge)
+        public NeuralNetwork InterbreedWith(NeuralNetwork other)
+        {
+            return this;
+        }
+
+        private static void AddSignal(Connection edge)
         {
             edge.Target.AddToInput(edge.Source.Signal * edge.Tag);
         }
