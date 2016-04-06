@@ -47,7 +47,10 @@ namespace NeuroEngine
 
             _algorithm.Compute();
 
-            return _outputNeurons.Select(x => x.Signal).ToArray();
+            var result = _outputNeurons.Select(x => x.Signal).ToArray();
+            Reset();
+
+            return result;
         }
 
         public void Reset()

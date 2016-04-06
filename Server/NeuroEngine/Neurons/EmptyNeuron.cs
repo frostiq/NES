@@ -11,7 +11,6 @@
 
         public void Reset()
         {
-            throw new System.NotSupportedException();
         }
     }
 }
