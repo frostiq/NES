@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="ActivationFunctions\IActivationFunction.cs" />
     <Compile Include="ActivationFunctions\IdentityFunction.cs" />
+    <Compile Include="Connection.cs" />
     <Compile Include="Neurons\NeuronWithInput.cs" />
     <Compile Include="Neurons\EmptyNeuron.cs" />
     <Compile Include="Neurons\INeuron.cs" />

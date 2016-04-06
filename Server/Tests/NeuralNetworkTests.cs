@@ -6,7 +6,6 @@ using NeuroEngine.Neurons;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 using QuickGraph;
-using Connection = QuickGraph.TaggedEdge<NeuroEngine.Neurons.INeuron, double>;
 
 namespace Tests
 {
@@ -54,6 +53,12 @@ namespace Tests
 
             res.Should().HaveCount(1);
             res.First().ShouldBeEquivalentTo(inputSignal);
+        }
+
+        [Test]
+        public void TestCompute_ActivationFunc()
+        {
+            
         }
 
         [Test]

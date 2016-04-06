@@ -5,21 +5,20 @@ using MoreLinq;
 using NeuroEngine.Neurons;
 using QuickGraph;
 using QuickGraph.Algorithms.Search;
-using Connection = QuickGraph.TaggedEdge<NeuroEngine.Neurons.INeuron, double>;
 
 namespace NeuroEngine
 {
     public class NeuralNetwork
     {
         private readonly AdjacencyGraph<INeuron, Connection> _network;
-        private readonly ICollection<InputNeuron> _inputNeurons;
-        private readonly ICollection<BasicNeuron> _outputNeurons;
+        private readonly ICollection<INeuron> _inputNeurons;
+        private readonly ICollection<INeuron> _outputNeurons;
         private readonly BreadthFirstSearchAlgorithm<INeuron, Connection> _algorithm;
 
         public NeuralNetwork
             (AdjacencyGraph<INeuron, Connection> network, 
-            ICollection<InputNeuron> inputNeurons, 
-            ICollection<BasicNeuron> outputNeurons)
+            ICollection<INeuron> inputNeurons, 
+            ICollection<INeuron> outputNeurons)
         {
             _network = network;
             _outputNeurons = outputNeurons;
@@ -37,9 +36,9 @@ namespace NeuroEngine
             _algorithm.SetRootVertex(root);
         }
 
-        public ICollection<double> Compute(ICollection<double> input)
+        public double[] Compute(double[] input)
         {
-            if (input.Count != _inputNeurons.Count)
+            if (input.Length != _inputNeurons.Count)
             {
                 throw new ArgumentException("input.Count != inputNeurons.Count");
             }
@@ -48,7 +47,7 @@ namespace NeuroEngine
 
             _algorithm.Compute();
 
-            return _outputNeurons.Select(x => x.Signal).ToList();
+            return _outputNeurons.Select(x => x.Signal).ToArray();
         }
 
         public void Reset()
