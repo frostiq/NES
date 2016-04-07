@@ -33,8 +33,9 @@ namespace Assets.Scripts.Lib
 
         public void UpdateAnimat(Rigidbody rigidbody)
         {
+            Debug.Log(_deltas.DeltaAngle);
             rigidbody.velocity += _deltas.DeltaVelocity * (rigidbody.velocity.sqrMagnitude == 0f ? Vector3.forward : rigidbody.velocity.normalized);
-            rigidbody.velocity = Quaternion.Euler(Vector3.up*_deltas.DeltaAngle) * rigidbody.velocity;
+            rigidbody.velocity = Quaternion.Euler(0f, _deltas.DeltaAngle * 5f ,0f) * rigidbody.velocity;
         }
     }
 }

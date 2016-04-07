@@ -4,7 +4,7 @@ namespace NeuroEngine
 {
     public class Connection : QuickGraph.TaggedEdge<INeuron, double>
     {
-        public Connection(INeuron source, INeuron target, double tag) : base(source, target, tag)
+        public Connection(INeuron source, INeuron target, double weight) : base(source, target, weight)
         {
         }
     }

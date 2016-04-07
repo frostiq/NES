@@ -20,7 +20,7 @@ namespace Assets.Scripts.Lib
             RenderTexture.active = rt;
             screenShot.ReadPixels(new Rect(0, 0, _resolution.width, _resolution.height), 0, 0);
             camera.targetTexture = null;
-            RenderTexture.active = null; // JC: added to avoid errors
+            RenderTexture.active = null;
             return screenShot.EncodeToPNG();
         }
     }
