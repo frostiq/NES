@@ -26,7 +26,7 @@ namespace NeuroEngine.Neurons
             }
         }
 
-        public override NeuronWithInput AddToInput(double value)
+        public override INeuron AddToInput(double value)
         {
             _signal = null;
             return base.AddToInput(value);

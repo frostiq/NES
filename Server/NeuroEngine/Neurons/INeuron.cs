@@ -3,7 +3,9 @@
     public interface INeuron
     {
         double Signal { get; }
-        NeuronWithInput AddToInput(double value);
+
+        INeuron AddToInput(double value);
+
         void Reset();
     }
 }

@@ -23,19 +23,25 @@ namespace Assets.Scripts.Lib
         public void SendPicture(byte[] data)
         {
             _udp.Send(data, data.Length);
-            _udp.BeginReceive(asyncResult =>
-            {
-                var u = (UdpClient) asyncResult.AsyncState;
-                var receiveBytes = u.EndReceive(asyncResult, ref _fakeEndPoint);
-                _deltas = _deserializer.Deserialize(receiveBytes);
-            }, _udp);
+            //_udp.BeginReceive(asyncResult =>
+            //{
+            //    var u = (UdpClient)asyncResult.AsyncState;
+            //    var receiveBytes = u.EndReceive(asyncResult, ref _fakeEndPoint);
+            //    _deltas = _deserializer.Deserialize(receiveBytes);
+            //    Debug.Log(_deltas.DeltaAngle);
+            //}, _udp);
+            var receiveBytes = _udp.Receive(ref _fakeEndPoint);
+            _deltas = _deserializer.Deserialize(receiveBytes);
+            Debug.Log(_deltas.DeltaAngle);
         }
 
         public void UpdateAnimat(Rigidbody rigidbody)
         {
-            Debug.Log(_deltas.DeltaAngle);
-            rigidbody.velocity += _deltas.DeltaVelocity * (rigidbody.velocity.sqrMagnitude == 0f ? Vector3.forward : rigidbody.velocity.normalized);
-            rigidbody.velocity = Quaternion.Euler(0f, _deltas.DeltaAngle * 5f ,0f) * rigidbody.velocity;
+            rigidbody.velocity += _deltas.DeltaVelocity *
+                                  (rigidbody.velocity.sqrMagnitude == 0f
+                                      ? Vector3.forward
+                                      : rigidbody.velocity.normalized);
+            rigidbody.velocity = Quaternion.Euler(0f, _deltas.DeltaAngle * 5f, 0f) * rigidbody.velocity;
         }
     }
 }

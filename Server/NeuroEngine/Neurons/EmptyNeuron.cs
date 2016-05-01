@@ -4,9 +4,9 @@
     {
         public double Signal => 0d;
 
-        public NeuronWithInput AddToInput(double value)
+        public INeuron AddToInput(double value)
         {
-            throw new System.NotSupportedException();
+            return this;
         }
 
         public void Reset()

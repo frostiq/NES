@@ -26,7 +26,7 @@ namespace Tests
         {
             var linkWeight = _fixture.Create<double>();
 
-            var input = new InputNeuron();
+            var input = new NeuronWithInput();
             var output = new BasicNeuron(new IdentityFunction());
             var graph = new AdjacencyGraph<INeuron, Connection>();
             graph.AddVerticesAndEdge(new Connection(input, output, linkWeight));
@@ -43,7 +43,7 @@ namespace Tests
         {
             var inputSignal = _fixture.Create<double>();
 
-            var input = new InputNeuron();
+            var input = new NeuronWithInput();
             var output = new BasicNeuron(new IdentityFunction());
             var graph = new AdjacencyGraph<INeuron, Connection>();
             graph.AddVerticesAndEdge(new Connection(input, output, 1d));
@@ -67,7 +67,7 @@ namespace Tests
             var iToMSignal = 1d;
             var mToOSignal = 2d;
             var inputSignals = new[] {_fixture.Create<double>(), _fixture.Create<double>()};
-            var inputs = new[] {new InputNeuron(), new InputNeuron()};
+            var inputs = new[] {new NeuronWithInput(), new NeuronWithInput()};
             var mids = new[] {new BasicNeuron(new IdentityFunction(), "m1"), new BasicNeuron(new IdentityFunction(), "m2")};
             var output = new[] {new BasicNeuron(new IdentityFunction(), "o1"), new BasicNeuron(new IdentityFunction(), "o2")};
             var graph = new AdjacencyGraph<INeuron, Connection>();

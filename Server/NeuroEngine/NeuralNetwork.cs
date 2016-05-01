@@ -15,6 +15,8 @@ namespace NeuroEngine
         private readonly ICollection<INeuron> _outputNeurons;
         private readonly BreadthFirstSearchAlgorithm<INeuron, Connection> _algorithm;
 
+        public INeuron RootVertex { get; }
+
         public NeuralNetwork
             (AdjacencyGraph<INeuron, Connection> network, 
             ICollection<INeuron> inputNeurons, 
@@ -24,16 +26,16 @@ namespace NeuroEngine
             _outputNeurons = outputNeurons;
             _inputNeurons = inputNeurons;
 
-            var root = new EmptyNeuron();
-            _network.AddVertex(root);
+            RootVertex = new EmptyNeuron();
+            _network.AddVertex(RootVertex);
             foreach (var inputNeuron in _inputNeurons)
             {
-                _network.AddEdge(new Connection(root, inputNeuron, 0d));
+                _network.AddEdge(new Connection(RootVertex, inputNeuron, 0d));
             }
 
             _algorithm = new BreadthFirstSearchAlgorithm<INeuron, Connection>(_network);
             _algorithm.ExamineEdge += AddSignal;
-            _algorithm.SetRootVertex(root);
+            _algorithm.SetRootVertex(RootVertex);
         }
 
         public double[] Compute(double[] input)
@@ -58,14 +60,14 @@ namespace NeuroEngine
             foreach (var neuron in _network.Vertices) neuron.Reset();
         }
 
-        public NeuralNetwork InterbreedWith(NeuralNetwork other)
+        public IEnumerable<Connection> GetConnections(INeuron neuron)
         {
-            return this;
+            return _network.OutEdges(neuron);
         }
 
         private static void AddSignal(Connection edge)
         {
-            edge.Target.AddToInput(edge.Source.Signal * edge.Tag);
+            edge.Target.AddToInput(edge.Source.Signal * edge.Weight);
         }
     }
 }

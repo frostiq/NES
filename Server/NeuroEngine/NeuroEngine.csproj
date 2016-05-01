@@ -64,10 +64,10 @@
     <Compile Include="ActivationFunctions\IActivationFunction.cs" />
     <Compile Include="ActivationFunctions\IdentityFunction.cs" />
     <Compile Include="Connection.cs" />
+    <Compile Include="Interbreeder.cs" />
     <Compile Include="Neurons\NeuronWithInput.cs" />
     <Compile Include="Neurons\EmptyNeuron.cs" />
     <Compile Include="Neurons\INeuron.cs" />
-    <Compile Include="Neurons\InputNeuron.cs" />
     <Compile Include="NeuralNetwork.cs" />
     <Compile Include="Neurons\BasicNeuron.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

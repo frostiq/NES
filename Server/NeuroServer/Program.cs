@@ -42,8 +42,8 @@ namespace NeuroServer
 
         public static NeuralNetwork BuildNetwork()
         {
-            var inputs = MoreEnumerable.GenerateByIndex(i => new InputNeuron()).Take(InputSize).ToArray();
-            var output = new NeuronWithInput[] {new BasicNeuron(new IdentityFunction()), new InputNeuron()  };
+            var inputs = MoreEnumerable.GenerateByIndex(i => new NeuronWithInput()).Take(InputSize).ToArray();
+            var output = new [] {new BasicNeuron(new IdentityFunction()), new NeuronWithInput()  };
             var graph = new AdjacencyGraph<INeuron, Connection>();
 
             for (int i = 0; i < InputSize; i++)

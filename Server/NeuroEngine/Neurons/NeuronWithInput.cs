@@ -1,18 +1,18 @@
 ﻿namespace NeuroEngine.Neurons
 {
-    public abstract class NeuronWithInput : INeuron
+    public class NeuronWithInput : INeuron
     {
         protected double Input;
         protected string Tag;
 
-        protected NeuronWithInput(string tag = "")
+        public NeuronWithInput(string tag = "")
         {
             Tag = tag;
         }
 
-        public abstract double Signal { get; }
+        public virtual double Signal => Input;
 
-        public virtual NeuronWithInput AddToInput(double value)
+        public virtual INeuron AddToInput(double value)
         {
             Input += value;
             return this;

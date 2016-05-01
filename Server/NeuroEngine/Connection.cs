@@ -1,4 +1,5 @@
-﻿using NeuroEngine.Neurons;
+﻿using System.Security.Cryptography.X509Certificates;
+using NeuroEngine.Neurons;
 
 namespace NeuroEngine
 {
@@ -6,6 +7,9 @@ namespace NeuroEngine
     {
         public Connection(INeuron source, INeuron target, double weight) : base(source, target, weight)
         {
+            
         }
+
+        public double Weight => Tag;
     }
 }
