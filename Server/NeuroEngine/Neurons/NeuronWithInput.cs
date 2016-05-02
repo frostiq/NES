@@ -1,4 +1,6 @@
-﻿namespace NeuroEngine.Neurons
+﻿using NeuroEngine.ActivationFunctions;
+
+namespace NeuroEngine.Neurons
 {
     public class NeuronWithInput : INeuron
     {
@@ -22,5 +24,7 @@
         {
             Input = 0d;
         }
+
+        public virtual IActivationFunction ActivationFunction { get; } = new IdentityFunction();
     }
 }

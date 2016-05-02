@@ -91,6 +91,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BinarySerializerTests.cs" />
+    <Compile Include="InterbreederTests.cs" />
     <Compile Include="NeuralNetworkTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

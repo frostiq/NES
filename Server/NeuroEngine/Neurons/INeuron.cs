@@ -1,4 +1,6 @@
-﻿namespace NeuroEngine.Neurons
+﻿using NeuroEngine.ActivationFunctions;
+
+namespace NeuroEngine.Neurons
 {
     public interface INeuron
     {
@@ -7,5 +9,7 @@
         INeuron AddToInput(double value);
 
         void Reset();
+
+        IActivationFunction ActivationFunction { get; }
     }
 }

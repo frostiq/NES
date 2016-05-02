@@ -17,6 +17,7 @@ namespace NeuroEngine
         private readonly Queue<Connection> _blueQueue = new Queue<Connection>();
         private readonly Queue<Connection> _redQueue = new Queue<Connection>();
         private readonly ISet<INeuron> _markers = new HashSet<INeuron>();
+        private readonly ISet<Tuple<INeuron, INeuron>> _newNeurons = new HashSet<Tuple<INeuron, INeuron>>();
         private readonly Random _random = new Random();
 
         public NeuralNetwork Interbreed(NeuralNetwork redNetwork, NeuralNetwork blueNetwork)
@@ -29,6 +30,8 @@ namespace NeuroEngine
                 .ForEach(_blueQueue.Enqueue);
 
             var result = new AdjacencyGraph<INeuron, Connection>();
+            var inputs = new HashSet<INeuron>();
+            var outputs = new HashSet<INeuron>();
 
             while (_redQueue.Count > 0 && _blueQueue.Count > 0)
             {
@@ -39,35 +42,52 @@ namespace NeuroEngine
 
                 if (IsNotMarked(a) && IsNotMarked(b))
                 {
-                    var axb = Interbreed(a, b);
-                    result.AddVertex(axb);
+                    _newNeurons.Add(Tuple.Create(a,b));
                     Mark(a, b);
                 }
 
                 var newConnections = Translate(za).Concat(Translate(yb));
                 result.AddEdgeRange(newConnections);
 
-                GetRandomSubset(redNetwork.GetConnections(a)).ForEach(_redQueue.Enqueue);
-                GetRandomSubset(blueNetwork.GetConnections(b)).ForEach(_blueQueue.Enqueue);
+                AddRandomSubsetToQueue(redNetwork.GetConnections(a), _redQueue);
+                AddRandomSubsetToQueue(blueNetwork.GetConnections(b), _blueQueue);
             }
 
-            return new NeuralNetwork(result, null, null);
+            return new NeuralNetwork(result, inputs, outputs);
         }
 
 
         private INeuron Interbreed(INeuron a, INeuron b)
         {
-            return null;
+            if (a == null || b == null)
+                return null;
+
+            return new BasicNeuron(_random.Next() % 2 == 0 ? a.ActivationFunction : b.ActivationFunction);
         }
 
-        private ICollection<Connection> Translate(Connection connection)
+        private IEnumerable<Connection> Translate(Connection connection)
         {
-            return null;
+            var sources = FindOffspring(connection.Source);
+            var targets = FindOffspring(connection.Target);
+
+            return
+            from s in sources
+            from t in targets
+            select new Connection(s, t, connection.Weight);
         }
 
-        private IEnumerable<Connection> GetRandomSubset(IEnumerable<Connection> connections)
+        private ICollection<INeuron> FindOffspring(INeuron ancestor)
         {
-            return connections.Where(x => _random.Next()%3 > 0);
+            return _newNeurons.Where(t => t.Item1 == ancestor || t.Item2 == ancestor)
+                              .Select(t => Interbreed(t.Item1, t.Item2))
+                              .ToList();
+        } 
+        
+        private void AddRandomSubsetToQueue(IEnumerable<Connection> connections, Queue<Connection> queue)
+        {
+            var selected = connections.Where(x => _random.Next() % 3 > 0);
+
+            selected.ForEach(queue.Enqueue);
         }
 
         private bool IsNotMarked(INeuron neuron)

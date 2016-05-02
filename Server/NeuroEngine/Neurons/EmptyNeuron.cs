@@ -1,4 +1,6 @@
-﻿namespace NeuroEngine.Neurons
+﻿using NeuroEngine.ActivationFunctions;
+
+namespace NeuroEngine.Neurons
 {
     public class EmptyNeuron : INeuron
     {
@@ -12,5 +14,7 @@
         public void Reset()
         {
         }
+
+        public IActivationFunction ActivationFunction { get; } = new IdentityFunction();
     }
 }

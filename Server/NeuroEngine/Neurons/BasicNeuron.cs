@@ -37,5 +37,7 @@ namespace NeuroEngine.Neurons
             base.Reset();
             _signal = null;
         }
+
+        public override IActivationFunction ActivationFunction => _activationFunction;
     }
 }
