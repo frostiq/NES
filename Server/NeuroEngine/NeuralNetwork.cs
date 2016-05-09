@@ -11,24 +11,22 @@ namespace NeuroEngine
     public class NeuralNetwork
     {
         private readonly AdjacencyGraph<INeuron, Connection> _network;
-        private readonly ICollection<INeuron> _inputNeurons;
-        private readonly ICollection<INeuron> _outputNeurons;
         private readonly BreadthFirstSearchAlgorithm<INeuron, Connection> _algorithm;
 
         public INeuron RootVertex { get; }
+        public ICollection<INeuron> InputNeurons { get; }
+        public ICollection<INeuron> OutputNeurons { get; }
 
         public NeuralNetwork
-            (AdjacencyGraph<INeuron, Connection> network, 
-            ICollection<INeuron> inputNeurons, 
-            ICollection<INeuron> outputNeurons)
+            (AdjacencyGraph<INeuron, Connection> network)
         {
             _network = network;
-            _outputNeurons = outputNeurons;
-            _inputNeurons = inputNeurons;
+            OutputNeurons = network.Vertices.Where(network.IsOutEdgesEmpty).ToList();
+            InputNeurons = network.Vertices.Where(n => network.Edges.All(e => e.Target != n)).ToList();
 
             RootVertex = new EmptyNeuron();
             _network.AddVertex(RootVertex);
-            foreach (var inputNeuron in _inputNeurons)
+            foreach (var inputNeuron in InputNeurons)
             {
                 _network.AddEdge(new Connection(RootVertex, inputNeuron, 0d));
             }
@@ -40,16 +38,16 @@ namespace NeuroEngine
 
         public double[] Compute(double[] input)
         {
-            if (input.Length != _inputNeurons.Count)
+            if (input.Length != InputNeurons.Count)
             {
                 throw new ArgumentException("input.Count != inputNeurons.Count");
             }
 
-            Enumerable.Zip(input, _inputNeurons, (d, neuron) => neuron.AddToInput(d)).Consume();
+            Enumerable.Zip(input, InputNeurons, (d, neuron) => neuron.AddToInput(d)).Consume();
 
             _algorithm.Compute();
 
-            var result = _outputNeurons.Select(x => x.Signal).ToArray();
+            var result = OutputNeurons.Select(x => x.Signal).ToArray();
             Reset();
 
             return result;

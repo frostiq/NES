@@ -30,8 +30,6 @@ namespace NeuroEngine
                 .ForEach(_blueQueue.Enqueue);
 
             var result = new AdjacencyGraph<INeuron, Connection>();
-            var inputs = new HashSet<INeuron>();
-            var outputs = new HashSet<INeuron>();
 
             while (_redQueue.Count > 0 && _blueQueue.Count > 0)
             {
@@ -53,7 +51,7 @@ namespace NeuroEngine
                 AddRandomSubsetToQueue(blueNetwork.GetConnections(b), _blueQueue);
             }
 
-            return new NeuralNetwork(result, inputs, outputs);
+            return new NeuralNetwork(result);
         }
 
 
