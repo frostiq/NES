@@ -53,7 +53,7 @@ namespace NeuroServer
             }
             //output[1].AddToInput(.1);
 
-            return new NeuralNetwork(graph);
+            return new NeuralNetwork(graph, inputs, output);
         }
     }
 }
