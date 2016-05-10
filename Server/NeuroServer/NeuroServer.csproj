@@ -80,13 +80,13 @@
       <Project>{a9b4633d-e361-440b-a7f9-3281911e4d61}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Networking\Networking.csproj">
+      <Project>{A310FAD7-88A8-4463-A3B1-DE2CDF903793}</Project>
+      <Name>Networking</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NeuroEngine\NeuroEngine.csproj">
       <Project>{a863a162-5deb-4ab1-b13c-5b1ebafdc52c}</Project>
       <Name>NeuroEngine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\UDP\UDP.csproj">
-      <Project>{a310fad7-88a8-4463-a3b1-de2cdf903793}</Project>
-      <Name>UDP</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

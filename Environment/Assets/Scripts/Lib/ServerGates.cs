@@ -8,29 +8,21 @@ namespace Assets.Scripts.Lib
 {
     public class ServerGates
     {
-        private readonly UdpClient _udp;
+        private readonly NetworkStream _stream;
         private readonly ISerializer<Deltas> _deserializer = new BinarySerializer();
-        private IPEndPoint _fakeEndPoint = new IPEndPoint(IPAddress.Any, 0);
         private Deltas _deltas;
 
         public ServerGates(IPEndPoint serverEndpoint, int listenPort)
         {
-            _udp = new UdpClient(listenPort);
-            _udp.Connect(serverEndpoint);
-            _udp.Client.ReceiveTimeout = 500;
+            var tcpClient = new TcpClient("localhost", 52200) {ReceiveTimeout = 500};
+            _stream = tcpClient.GetStream();
         }
 
         public void SendPicture(byte[] data)
         {
-            _udp.Send(data, data.Length);
-            //_udp.BeginReceive(asyncResult =>
-            //{
-            //    var u = (UdpClient)asyncResult.AsyncState;
-            //    var receiveBytes = u.EndReceive(asyncResult, ref _fakeEndPoint);
-            //    _deltas = _deserializer.Deserialize(receiveBytes);
-            //    Debug.Log(_deltas.DeltaAngle);
-            //}, _udp);
-            var receiveBytes = _udp.Receive(ref _fakeEndPoint);
+            _stream.Write(data, 0, data.Length);
+            var receiveBytes = new byte[65536];
+            _stream.Read(receiveBytes, 0, receiveBytes.Length);
             _deltas = _deserializer.Deserialize(receiveBytes);
             Debug.Log(_deltas.DeltaAngle);
         }

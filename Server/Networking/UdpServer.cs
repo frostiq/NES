@@ -7,7 +7,7 @@ using NLog;
 
 namespace NeuroServer.Udp
 {
-    public class UdpServer: IDisposable
+    public class UdpServer: IServer
     {
         public event Func<byte[], byte[]> OnProcess;
 

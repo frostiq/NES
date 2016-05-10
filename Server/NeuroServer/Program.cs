@@ -22,7 +22,7 @@ namespace NeuroServer
             var serializer = new BinarySerializer();
             var imageManager = new ImageManager();
             var _log = LogManager.GetLogger("Server");
-            using (var server = new UdpServer(52200))
+            using (var server = new TcpServer(52200))
             {
                 server.Start();
                 server.OnProcess += bytes =>
@@ -45,6 +45,7 @@ namespace NeuroServer
             var inputs = MoreEnumerable.GenerateByIndex(i => new NeuronWithInput()).Take(InputSize).ToArray();
             var output = new [] {new BasicNeuron(new IdentityFunction()), new NeuronWithInput()  };
             var graph = new AdjacencyGraph<INeuron, Connection>();
+            graph.AddVertex(output[1]);
 
             for (int i = 0; i < InputSize; i++)
             {
