@@ -1,11 +1,14 @@
-﻿using NeuroEngine.ActivationFunctions;
+﻿using System.Xml.Serialization;
+using NeuroEngine.ActivationFunctions;
 
 namespace NeuroEngine.Neurons
 {
     public class NeuronWithInput : INeuron
     {
         protected double Input;
-        protected string Tag;
+
+        [XmlAttribute("tag")]
+        public string Tag { get; }
 
         public NeuronWithInput(string tag = "")
         {
@@ -26,5 +29,11 @@ namespace NeuroEngine.Neurons
         }
 
         public virtual IActivationFunction ActivationFunction { get; } = new IdentityFunction();
+
+
+        public override string ToString()
+        {
+            return $"{Tag}@{Input}";
+        }
     }
 }

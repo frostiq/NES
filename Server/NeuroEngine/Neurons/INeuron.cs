@@ -11,5 +11,7 @@ namespace NeuroEngine.Neurons
         void Reset();
 
         IActivationFunction ActivationFunction { get; }
+
+        string Tag { get; }
     }
 }

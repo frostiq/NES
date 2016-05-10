@@ -16,5 +16,7 @@ namespace NeuroEngine.Neurons
         }
 
         public IActivationFunction ActivationFunction { get; } = new IdentityFunction();
+
+        public string Tag => GetType().Name;
     }
 }

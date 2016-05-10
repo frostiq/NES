@@ -9,9 +9,9 @@ namespace NeuroEngine.Neurons
         private readonly IActivationFunction _activationFunction;
 
         public BasicNeuron(IActivationFunction activationFunction, string tag = "")
+            : base(tag)
         {
             _activationFunction = activationFunction;
-            Tag = tag;
         }
 
         public override double Signal

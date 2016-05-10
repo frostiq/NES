@@ -14,61 +14,72 @@ namespace NeuroEngine
 
     public class Interbreeder : IInterbreeder
     {
-        private readonly Queue<Connection> _blueQueue = new Queue<Connection>();
-        private readonly Queue<Connection> _redQueue = new Queue<Connection>();
-        private readonly ISet<INeuron> _markers = new HashSet<INeuron>();
-        private readonly ISet<Tuple<INeuron, INeuron>> _newNeurons = new HashSet<Tuple<INeuron, INeuron>>();
-        private readonly Random _random = new Random();
+        private readonly Queue<Connection> blueQueue = new Queue<Connection>();
+        private readonly Queue<Connection> redQueue = new Queue<Connection>();
+        private readonly ISet<INeuron> markers = new HashSet<INeuron>();
+        private readonly ISet<Tuple<INeuron, INeuron, INeuron>> newNeurons = new HashSet<Tuple<INeuron, INeuron, INeuron>>();
+        private readonly Random random = new Random();
+        private EmptyNeuron alpha;
+        private EmptyNeuron omega;
+        private AdjacencyGraph<INeuron, Connection> resultNetwork;
 
         public NeuralNetwork Interbreed(NeuralNetwork redNetwork, NeuralNetwork blueNetwork)
         {
-            redNetwork.GetConnections(redNetwork.RootVertex)
-                .OrderBy(x => _random.Next())
-                .ForEach(_redQueue.Enqueue);
-            blueNetwork.GetConnections(blueNetwork.RootVertex)
-                .OrderBy(x => _random.Next())
-                .ForEach(_blueQueue.Enqueue);
+            redNetwork.GetConnections(redNetwork.AlphaVertex)
+                .OrderBy(x => random.Next())
+                .ForEach(redQueue.Enqueue);
+            blueNetwork.GetConnections(blueNetwork.AlphaVertex)
+                .OrderBy(x => random.Next())
+                .ForEach(blueQueue.Enqueue);
 
-            var result = new AdjacencyGraph<INeuron, Connection>();
-            var inputs = new HashSet<INeuron>();
-            var outputs = new HashSet<INeuron>();
+            alpha = new EmptyNeuron();
+            omega = new EmptyNeuron();
+            resultNetwork = new AdjacencyGraph<INeuron, Connection>();
+            resultNetwork.AddVertex(alpha);
+            resultNetwork.AddVertex(omega);
 
-            while (_redQueue.Count > 0 && _blueQueue.Count > 0)
+            while (redQueue.Count > 0 && blueQueue.Count > 0)
             {
-                var za = _redQueue.Dequeue();
-                var yb = _blueQueue.Dequeue();
+                var za = redQueue.Dequeue();
+                var yb = blueQueue.Dequeue();
                 var a = za.Target;
                 var b = yb.Target;
 
                 if (IsNotMarked(a) && IsNotMarked(b))
                 {
-                    _newNeurons.Add(Tuple.Create(a,b));
+                    var product = Interbreed(a, b);
+                    newNeurons.Add(Tuple.Create(a, b, product));
                     Mark(a, b);
                 }
 
-                var newConnections = Translate(za).Concat(Translate(yb));
-                result.AddEdgeRange(newConnections);
+                var newConnections = Translate(za).Concat(Translate(yb)).ToList();
+                AddNewConnections(newConnections);
 
-                AddRandomSubsetToQueue(redNetwork.GetConnections(a), _redQueue);
-                AddRandomSubsetToQueue(blueNetwork.GetConnections(b), _blueQueue);
+                AddRandomSubsetToQueue(redNetwork.GetConnections(a), redQueue);
+                AddRandomSubsetToQueue(blueNetwork.GetConnections(b), blueQueue);
             }
 
-            return new NeuralNetwork(result, inputs, outputs);
+            return new NeuralNetwork(resultNetwork, alpha, omega);
         }
 
 
         private INeuron Interbreed(INeuron a, INeuron b)
         {
-            if (a == null || b == null)
-                return null;
+            if (a is EmptyNeuron)
+                return a;
+            if (b is EmptyNeuron)
+                return b;
 
-            return new BasicNeuron(_random.Next() % 2 == 0 ? a.ActivationFunction : b.ActivationFunction);
+            return new BasicNeuron(random.Next() % 2 == 0 ? a.ActivationFunction : b.ActivationFunction, a.Tag + b.Tag);
         }
 
         private IEnumerable<Connection> Translate(Connection connection)
         {
-            var sources = FindOffspring(connection.Source);
-            var targets = FindOffspring(connection.Target);
+            var sources = FindOffsprings(connection.Source);
+            var targets = FindOffsprings(connection.Target);
+
+            sources = sources.Any() ? sources : new[] { alpha };
+            targets = targets.Any() ? targets : new[] { omega };
 
             return
             from s in sources
@@ -76,28 +87,39 @@ namespace NeuroEngine
             select new Connection(s, t, connection.Weight);
         }
 
-        private ICollection<INeuron> FindOffspring(INeuron ancestor)
+        private ICollection<INeuron> FindOffsprings(INeuron ancestor)
         {
-            return _newNeurons.Where(t => t.Item1 == ancestor || t.Item2 == ancestor)
-                              .Select(t => Interbreed(t.Item1, t.Item2))
-                              .ToList();
-        } 
-        
+            return newNeurons.Where(t => t.Item1 == ancestor || t.Item2 == ancestor)
+                             .Select(t => t.Item3)
+                             .ToList();
+        }
+
         private void AddRandomSubsetToQueue(IEnumerable<Connection> connections, Queue<Connection> queue)
         {
-            var selected = connections.Where(x => _random.Next() % 3 > 0);
+            var selected = connections.Where(x => random.Next() % 3 > 0);
 
             selected.ForEach(queue.Enqueue);
         }
 
         private bool IsNotMarked(INeuron neuron)
         {
-            return !_markers.Contains(neuron);
+            return !markers.Contains(neuron);
         }
 
         private void Mark(params INeuron[] neurons)
         {
-            _markers.UnionWith(neurons);
+            markers.UnionWith(neurons);
+        }
+
+        private void AddNewConnections(IEnumerable<Connection> connections)
+        {
+            foreach (var c in connections)
+            {
+                if (!resultNetwork.ContainsEdge(c))
+                {
+                    resultNetwork.AddVerticesAndEdge(c);
+                }
+            }
         }
     }
 }
