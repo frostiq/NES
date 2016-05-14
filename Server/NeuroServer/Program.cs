@@ -21,7 +21,7 @@ namespace NeuroServer
             var network = BuildNetwork();
             var serializer = new BinarySerializer();
             var imageManager = new ImageManager();
-            var _log = LogManager.GetLogger("Server");
+            var log = LogManager.GetLogger("Server");
             using (var server = new TcpServer(52200))
             {
                 server.Start();
@@ -29,11 +29,10 @@ namespace NeuroServer
                 {
                     var input = imageManager.ConvertFromPngToInput(bytes, InputSize);
                     input = imageManager.Normalize(input);
-                    //_log.Info(string.Join(";", input.Select(x => x.ToString("F"))));
                     var output = network.Compute(input);
-                    //_log.Info(output[0].ToString("F"));
-                    var deltas = new Deltas((float)output[0], (float)output[1]);
-                    _log.Info(deltas.DeltaAngle);
+                    var restart = DateTime.Now.Second % 30 == 0;
+                    var deltas = new Control((float)output[0], (float)output[1], restart);
+                    log.Info(deltas.DeltaAngle);
                     return serializer.Serialize(deltas);
                 };
                 Console.Read();

@@ -19,6 +19,7 @@ namespace NeuroEngine
 
         public INeuron AlphaVertex { get; }
         public INeuron OmegaVertex { get; }
+        public Guid Guid { get; } = Guid.NewGuid();
 
         public NeuralNetwork
             (AdjacencyGraph<INeuron, Connection> network, 

@@ -3,37 +3,42 @@ using System.Net.Sockets;
 using Common.Contracts;
 using Common.Utility;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Lib
 {
     public class ServerGates
     {
-        private readonly NetworkStream _stream;
-        private readonly ISerializer<Deltas> _deserializer = new BinarySerializer();
-        private Deltas _deltas;
+		private readonly NetworkStream stream;
+		private readonly ISerializer<Control> deserializer = new BinarySerializer();
+		private Control control;
 
-        public ServerGates(IPEndPoint serverEndpoint, int listenPort)
+        public ServerGates()
         {
             var tcpClient = new TcpClient("localhost", 52200) {ReceiveTimeout = 500};
-            _stream = tcpClient.GetStream();
+            stream = tcpClient.GetStream();
         }
 
         public void SendPicture(byte[] data)
         {
-            _stream.Write(data, 0, data.Length);
-            var receiveBytes = new byte[65536];
-            _stream.Read(receiveBytes, 0, receiveBytes.Length);
-            _deltas = _deserializer.Deserialize(receiveBytes);
-            Debug.Log(_deltas.DeltaAngle);
+            stream.Write(data, 0, data.Length);
+            var receiveBytes = new byte[9];
+            stream.Read(receiveBytes, 0, receiveBytes.Length);
+            control = deserializer.Deserialize(receiveBytes);
+            Debug.Log(control.DeltaAngle);
         }
 
         public void UpdateAnimat(Rigidbody rigidbody)
         {
-            rigidbody.velocity += _deltas.DeltaVelocity *
+            rigidbody.velocity += control.DeltaVelocity *
                                   (rigidbody.velocity.sqrMagnitude == 0f
                                       ? Vector3.forward
                                       : rigidbody.velocity.normalized);
-            rigidbody.velocity = Quaternion.Euler(0f, _deltas.DeltaAngle * 5f, 0f) * rigidbody.velocity;
+            rigidbody.velocity = Quaternion.Euler(0f, control.DeltaAngle * 5f, 0f) * rigidbody.velocity;
+
+			if (control.Restart) {
+				SceneManager.LoadScene (0);
+			}
         }
     }
 }

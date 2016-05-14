@@ -3,15 +3,17 @@
 namespace Common.Contracts
 {
     [Serializable]
-    public struct Deltas
+    public struct Control
     {
         public readonly float DeltaAngle;
         public readonly float DeltaVelocity;
+        public readonly bool Restart;
 
-        public Deltas(float deltaAngle, float deltaVelocity)
+        public Control(float deltaAngle, float deltaVelocity, bool restart)
         {
             DeltaAngle = deltaAngle;
             DeltaVelocity = deltaVelocity;
+            Restart = restart;
         }
     }
 }

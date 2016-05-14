@@ -14,7 +14,7 @@ namespace Tests
         public void TestSerialization()
         {
             _fixture = new Fixture();
-            var deltas = _fixture.Create<Deltas>();
+            var deltas = _fixture.Create<Control>();
             var serializer = new BinarySerializer();
             var res = serializer.Deserialize(serializer.Serialize(deltas));
 

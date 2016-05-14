@@ -56,9 +56,9 @@ namespace NeuroServer.Udp
 
                 var client = _tcpListener.AcceptTcpClient();
 
-                Task.Factory.StartNew(() => Dispatch(client, token), token);
+                _log.Info($"Connection accepted form {client.Client.RemoteEndPoint}");
 
-                _log.Info("Connection accepted.");
+                Task.Factory.StartNew(() => Dispatch(client, token), token);
             }
         }
 
@@ -69,19 +69,20 @@ namespace NeuroServer.Udp
                 var bytes = new byte[65536];
 
                 using (var stream = client.GetStream())
-                while (!token.IsCancellationRequested)
-                {
-                    IPEndPoint endPoint = null;
-                    var rest = stream.Read(bytes, 0, bytes.Length);
-                    _log.Debug("Message recieved");
+                    while (true)
+                    {
+                        token.ThrowIfCancellationRequested();
 
-                    var response = OnProcess?.Invoke(bytes);
+                        stream.Read(bytes, 0, bytes.Length);
+                        _log.Debug("Message recieved");
 
-                    if (response != null)
-                        stream.Write(response, 0, response.Length);
+                        var response = OnProcess?.Invoke(bytes);
 
-                    _log.Debug("Message sent");
-                }
+                        if (response != null)
+                            stream.Write(response, 0, response.Length);
+
+                        _log.Debug("Message sent");
+                    }
             }
             catch (Exception e)
             {
