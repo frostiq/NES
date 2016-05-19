@@ -14,7 +14,8 @@ namespace Assets.Scripts
         private new Rigidbody rigidbody;
         private int _count;
         private ScreenshootMaker screenshootMaker;
-        private ServerGates serverGates;
+
+		private static ServerGates serverGates = new ServerGates ();
 
         void Start()
         {
@@ -22,7 +23,6 @@ namespace Assets.Scripts
             rigidbody.velocity = Vector3.forward;
             Count = 0;
             screenshootMaker = new ScreenshootMaker(new Resolution { width = 256 + 32, height = 64 });
-            serverGates = new ServerGates();
         }
 
         void FixedUpdate()

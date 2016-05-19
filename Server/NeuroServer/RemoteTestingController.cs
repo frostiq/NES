@@ -16,8 +16,8 @@ namespace NeuroServer
     public class RemoteTestingController : IRemoteTestingController, IDisposable
     {
         private const int InputNeuronsCount = 9;
-        private readonly TimeSpan _timeOfExperiment = TimeSpan.FromSeconds(20);
 
+        private readonly TimeSpan _timeOfExperiment;
         private readonly ImageManager _imageManager;
         private readonly ILogger _logger;
 
@@ -28,8 +28,9 @@ namespace NeuroServer
         private float _lastScore;
         private Response.MessageType _currentMessageType = Response.MessageType.Pause;
 
-        public RemoteTestingController(ImageManager imageManager, ILogger logger)
+        public RemoteTestingController(TimeSpan timeOfExperiment, ImageManager imageManager, ILogger logger)
         {
+            _timeOfExperiment = timeOfExperiment;
             _imageManager = imageManager;
             _logger = logger;
         }
@@ -88,7 +89,7 @@ namespace NeuroServer
                     throw new ArgumentOutOfRangeException();
             }
 
-            _logger.Info($"Response({response}) Request({request})");
+            _logger.Debug($"Response({response}) Request({request})");
 
             _lock.ExitReadLock();
 

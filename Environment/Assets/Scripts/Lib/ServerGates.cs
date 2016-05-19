@@ -9,7 +9,7 @@ namespace Assets.Scripts.Lib
 {
 	public class ServerGates
 	{
-		private readonly NetworkStream stream;
+		private readonly TcpClient tcpClient;
 		private readonly ISerializer<Request> reqSerializer = new BinarySerializer ();
 		private readonly ISerializer<Response> respSerializer = new BinarySerializer ();
 
@@ -19,12 +19,16 @@ namespace Assets.Scripts.Lib
 
 		public ServerGates ()
 		{
-			var tcpClient = new TcpClient ("localhost", 52200) { ReceiveTimeout = 500 };
-			stream = tcpClient.GetStream ();
+			tcpClient = new TcpClient () { ReceiveTimeout = 500 };
 		}
 
 		public void SendPicture (byte[] data)
 		{
+			if (!tcpClient.Connected) {
+				tcpClient.Connect ("localhost", 52200);
+			}
+			
+		    var stream = tcpClient.GetStream ();
 			Request request = new EmptyRequest ();
 
 			switch (response.Type) {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DAL;
 using NeuroEngine;
+using NLog;
 
 namespace NeuroServer
 {
@@ -21,13 +22,14 @@ namespace NeuroServer
             _remoteTestingController = remoteTestingController;
         }
 
-        public void StartTraining()
+        public void Train(IEnumerable<NeuralNetwork> initSet)
         {
-            ICollection<NeuralNetwork> initSet = new List<NeuralNetwork>();
-
             while (true)
             {
                 var testedSet = initSet.Select(nn => new TestResult { Score = _remoteTestingController.Test(nn), NeuralNetwork = nn }).ToList();
+
+                var logger = LogManager.GetLogger("res");
+                logger.Info(string.Join(", " ,testedSet.Select(x => x.Score)));
 
                 if (IsSatisfying(testedSet))
                     break;
@@ -41,12 +43,12 @@ namespace NeuroServer
 
         private IEnumerable<Tuple<NeuralNetwork, NeuralNetwork>> Select(ICollection<TestResult> testedSet)
         {
-            throw new NotImplementedException();
+            return testedSet.Select(x => Tuple.Create(x.NeuralNetwork, x.NeuralNetwork));
         }
 
         private bool IsSatisfying(ICollection<TestResult> testedSet)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         private class TestResult
