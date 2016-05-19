@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivationFunctions\ConstFunction.cs" />
     <Compile Include="ActivationFunctions\IActivationFunction.cs" />
     <Compile Include="ActivationFunctions\IdentityFunction.cs" />
     <Compile Include="Connection.cs" />
