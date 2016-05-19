@@ -56,7 +56,7 @@ namespace Assets.Scripts.Lib
 			var receiveBytes = new byte[9];
 			stream.Read (receiveBytes, 0, receiveBytes.Length);
 			response = respSerializer.Deserialize (receiveBytes);
-			Debug.Log (response.DeltaAngle);
+			Debug.Log (string.Format("{0:0.000} {1:0.000}", response.DeltaAngle, response.DeltaVelocity));
 		}
 
 		public void UpdateAnimat (Rigidbody rigidbody)
