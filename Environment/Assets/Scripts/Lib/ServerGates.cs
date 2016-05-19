@@ -10,8 +10,12 @@ namespace Assets.Scripts.Lib
     public class ServerGates
     {
 		private readonly NetworkStream stream;
-		private readonly ISerializer<Control> deserializer = new BinarySerializer();
-		private Control control;
+		private readonly ISerializer<Request> reqSerializer = new BinarySerializer();
+		private readonly ISerializer<Response> respSerializer = new BinarySerializer();
+
+		Response response = new Response(Response.MessageType.Pause);
+		float score;
+
 
         public ServerGates()
         {
@@ -21,24 +25,47 @@ namespace Assets.Scripts.Lib
 
         public void SendPicture(byte[] data)
         {
-            stream.Write(data, 0, data.Length);
+			Request request;
+			switch (response.Type) {
+			case Response.MessageType.Control:
+				request = new ImageRequest (data);
+				break;
+			case Response.MessageType.Restart:
+				request = new ScoreRequest (score);
+				break;
+			case Response.MessageType.End:
+				Application.Quit ();
+				request = new EmptyRequest ();
+				break;
+			default:
+				request = new EmptyRequest ();
+				break;
+			}
+
+
+			var reqBytes = reqSerializer.Serialize(request);
+			stream.Write(reqBytes, 0, reqBytes.Length);
             var receiveBytes = new byte[9];
             stream.Read(receiveBytes, 0, receiveBytes.Length);
-            control = deserializer.Deserialize(receiveBytes);
-            Debug.Log(control.DeltaAngle);
+			response = respSerializer.Deserialize(receiveBytes);
+            Debug.Log(response.DeltaAngle);
         }
 
         public void UpdateAnimat(Rigidbody rigidbody)
         {
-            rigidbody.velocity += control.DeltaVelocity *
+            rigidbody.velocity += response.DeltaVelocity *
                                   (rigidbody.velocity.sqrMagnitude == 0f
                                       ? Vector3.forward
                                       : rigidbody.velocity.normalized);
-            rigidbody.velocity = Quaternion.Euler(0f, control.DeltaAngle * 5f, 0f) * rigidbody.velocity;
+            rigidbody.velocity = Quaternion.Euler(0f, response.DeltaAngle * 5f, 0f) * rigidbody.velocity;
 
-			if (control.Restart) {
+			if (response.Type == Response.MessageType.Restart) {
 				SceneManager.LoadScene (0);
 			}
         }
+
+		public void UpdateScore(float score){
+			this.score = score;
+		}
     }
 }

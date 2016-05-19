@@ -33,6 +33,7 @@ namespace Assets.Scripts
         void LateUpdate()
         {
             var screenshoot = screenshootMaker.TakeScreenshoot(Eyes);
+			serverGates.UpdateScore (Count);
             serverGates.SendPicture(screenshoot);
         }
 

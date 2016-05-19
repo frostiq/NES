@@ -39,7 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contracts\Control.cs" />
+    <Compile Include="Contracts\Messages.cs" />
     <Compile Include="Utility\BinarySerializer.cs" />
     <Compile Include="Utility\ImageManager.cs" />
     <Compile Include="Utility\ISerializer.cs" />

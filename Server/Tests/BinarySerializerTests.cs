@@ -10,15 +10,30 @@ namespace Tests
     public class BinarySerializerTests
     {
         private IFixture _fixture;
-        [Test]
-        public void TestSerialization()
+
+        [SetUp]
+        public void SetUp()
         {
             _fixture = new Fixture();
-            var deltas = _fixture.Create<Control>();
-            var serializer = new BinarySerializer();
-            var res = serializer.Deserialize(serializer.Serialize(deltas));
+        }
 
-            res.ShouldBeEquivalentTo(deltas);
+        [Test]
+        public void TestImageRequestSerialization() => TestSerialization<ImageRequest, Request>();
+
+        [Test]
+        public void TestScoreRequestSerialization() => TestSerialization<ScoreRequest, Request>();
+
+        [Test]
+        public void TestResponseSerialization() => TestSerialization<Response, Response>();
+
+
+        private void TestSerialization<TEntity, TSerializerEntity>() where TEntity : TSerializerEntity
+        {
+            var entity = _fixture.Create<TEntity>();
+            var serializer =(ISerializer<TSerializerEntity>) new BinarySerializer();
+            var res = serializer.Deserialize(serializer.Serialize(entity));
+
+            res.ShouldBeEquivalentTo(entity);
         }
     }
 }

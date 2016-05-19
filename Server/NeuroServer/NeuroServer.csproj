@@ -67,8 +67,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TrainingSupervisor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemoteTestingController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="NLog.config">
@@ -79,6 +81,10 @@
     <ProjectReference Include="..\..\Common\Common.csproj">
       <Project>{a9b4633d-e361-440b-a7f9-3281911e4d61}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DAL\DAL.csproj">
+      <Project>{7afe9058-5924-446b-a54c-2c407a905dbf}</Project>
+      <Name>DAL</Name>
     </ProjectReference>
     <ProjectReference Include="..\Networking\Networking.csproj">
       <Project>{A310FAD7-88A8-4463-A3B1-DE2CDF903793}</Project>
