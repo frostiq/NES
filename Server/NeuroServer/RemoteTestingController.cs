@@ -25,8 +25,8 @@ namespace NeuroServer
         private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
 
         private NeuralNetwork _currentNeuralNetwork;
-        private Response.MessageType _currentMessageType = Response.MessageType.Pause;
         private float _lastScore;
+        private Response.MessageType _currentMessageType = Response.MessageType.Pause;
 
         public RemoteTestingController(ImageManager imageManager, ILogger logger)
         {
@@ -36,42 +36,60 @@ namespace NeuroServer
 
         public float Test(NeuralNetwork neuralNetwork)
         {
-            Signal(Response.MessageType.Control);
+            _currentNeuralNetwork = neuralNetwork;
+
+            Signal(Response.MessageType.Start);
 
             Task.Delay(_timeOfExperiment).Wait();
 
-            Signal(Response.MessageType.Start);
+            Signal(Response.MessageType.Result);
 
             return _lastScore;
         }
 
         public Response Compute(Request request)
         {
-            Response response;
-
             _lock.EnterReadLock();
+
+            var response = new Response(_currentMessageType);
             switch (_currentMessageType)
             {
-                case Response.MessageType.Control:
-                {
-                    var image = ((ImageRequest)request).Image;
-                    var input = _imageManager.ConvertFromPngToInput(image, InputNeuronsCount);
-                    input = _imageManager.Normalize(input);
-                    var output = _currentNeuralNetwork.Compute(input);
-                    response = new Response(Response.MessageType.Control, (float)output[0], (float)output[1]);
+                case Response.MessageType.Pause:
                     break;
-                }
                 case Response.MessageType.Start:
-                    _lastScore = ((ScoreRequest) request).Score;
-                    response = new Response(Response.MessageType.Control);
+                    _currentMessageType = Response.MessageType.Control;
+                    break;
+                case Response.MessageType.Control:
+                    {
+                        var image = ((ImageRequest)request).Image;
+                        var input = _imageManager.ConvertFromPngToInput(image, InputNeuronsCount);
+                        input = _imageManager.Normalize(input);
+                        var output = _currentNeuralNetwork.Compute(input);
+                        response = new Response(Response.MessageType.Control, (float)output[0], (float)output[1]);
+                        _waiter.Set();
+                        break;
+                    }
+                case Response.MessageType.Result:
+                    _currentMessageType = Response.MessageType.Finish;
+                    break;
+                case Response.MessageType.Finish:
+                    _lastScore = ((ScoreRequest)request).Score;
+                    _currentMessageType = Response.MessageType.Pause;
+                    _waiter.Set();
+                    break;
+                case Response.MessageType.End:
+                    _currentMessageType = Response.MessageType.Shutdown;
                     break;
 
-                default:
-                    response = new Response(_currentMessageType);
+                case Response.MessageType.Shutdown:
+                    _waiter.Set();
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            _waiter.Set();
+
             _logger.Info($"Response({response}) Request({request})");
+
             _lock.ExitReadLock();
 
             return response;

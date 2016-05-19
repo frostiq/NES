@@ -36,7 +36,6 @@ namespace NeuroServer.Udp
         public void Stop()
         {
             _cancellationTokenSource.Cancel();
-            _listenTask.Dispose();
             _tcpListener.Stop();
             _log.Info("Server stopped");
         }

@@ -14,8 +14,10 @@ namespace Common.Contracts
             Pause = 0,
             Start = 1,
             Control = 2,
-            Finish = 3,
-            End = 4
+            Result = 3,
+            Finish = 4,
+            End = 5,
+            Shutdown = 6,
         }
 
         public Response(MessageType type, float deltaAngle = 0f, float deltaVelocity = 0f)
