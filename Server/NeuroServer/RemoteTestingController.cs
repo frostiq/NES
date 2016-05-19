@@ -66,7 +66,10 @@ namespace NeuroServer
                         var input = _imageManager.ConvertFromPngToInput(image, InputNeuronsCount);
                         input = _imageManager.Normalize(input);
                         var output = _currentNeuralNetwork.Compute(input);
-                        response = new Response(Response.MessageType.Control, (float)output[0], (float)output[1]);
+                        response = new Response(
+                            Response.MessageType.Control, 
+                            Convert.ToSingle(output[0]), 
+                            Convert.ToSingle(output[1]));
                         _waiter.Set();
                         break;
                     }
