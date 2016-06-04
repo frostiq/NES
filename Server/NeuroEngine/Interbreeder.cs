@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MoreLinq;
 using NeuroEngine.Neurons;
+using NLog;
 using QuickGraph;
 
 namespace NeuroEngine
@@ -14,6 +15,8 @@ namespace NeuroEngine
 
     public class Interbreeder : IInterbreeder
     {
+        private readonly int inputSize;
+        private readonly int outputSize;
         private readonly Queue<Connection> blueQueue = new Queue<Connection>();
         private readonly Queue<Connection> redQueue = new Queue<Connection>();
         private readonly ISet<INeuron> markers = new HashSet<INeuron>();
@@ -22,9 +25,18 @@ namespace NeuroEngine
         private EmptyNeuron alpha;
         private EmptyNeuron omega;
         private AdjacencyGraph<INeuron, Connection> resultNetwork;
+        private readonly Logger _logger = LogManager.GetLogger("Interbreeder");
+
+        public Interbreeder(int inputSize, int outputSize)
+        {
+            this.inputSize = inputSize;
+            this.outputSize = outputSize;
+        }
 
         public NeuralNetwork Interbreed(NeuralNetwork redNetwork, NeuralNetwork blueNetwork)
         {
+            _logger.Info("Interbreeding started");
+
             redNetwork.GetConnections(redNetwork.AlphaVertex)
                 .OrderBy(x => random.Next())
                 .ForEach(redQueue.Enqueue);
@@ -59,7 +71,16 @@ namespace NeuroEngine
                 AddRandomSubsetToQueue(blueNetwork.GetConnections(b), blueQueue);
             }
 
-            return new NeuralNetwork(resultNetwork, alpha, omega);
+            var res = new NeuralNetwork(resultNetwork, alpha, omega);
+
+            if (res.IsCompliant(inputSize, outputSize))
+            {
+                _logger.Info("Interbreeding was finished succesfully");
+                return res;
+            }
+
+            _logger.Info("Interbreeding was not succesfull");
+            return Interbreed(redNetwork, blueNetwork);
         }
 
 

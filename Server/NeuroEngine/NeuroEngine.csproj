@@ -37,6 +37,10 @@
       <HintPath>..\packages\morelinq.1.4.0\lib\net35\MoreLinq.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.2.3\lib\net45\NLog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="QuickGraph, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
       <HintPath>..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.dll</HintPath>
       <Private>True</Private>
@@ -64,7 +68,9 @@
     <Compile Include="ActivationFunctions\ConstFunction.cs" />
     <Compile Include="ActivationFunctions\IActivationFunction.cs" />
     <Compile Include="ActivationFunctions\IdentityFunction.cs" />
+    <Compile Include="ActivationFunctions\ThFunction.cs" />
     <Compile Include="Connection.cs" />
+    <Compile Include="InitNeuroSet.cs" />
     <Compile Include="Interbreeder.cs" />
     <Compile Include="Neurons\NeuronWithInput.cs" />
     <Compile Include="Neurons\EmptyNeuron.cs" />

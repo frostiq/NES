@@ -1,11 +1,11 @@
-﻿using System.Xml;
+﻿using System;
+using System.Linq;
 using NeuroEngine;
 using NeuroEngine.ActivationFunctions;
 using NeuroEngine.Neurons;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 using QuickGraph;
-using QuickGraph.Serialization;
 
 namespace Tests
 {
@@ -14,23 +14,38 @@ namespace Tests
     {
         private Fixture _fixture;
         private Interbreeder _interbreeder;
+        private int _inputSize;
+        private int _outputSize;
 
         [SetUp]
         public void SetUp()
         {
             _fixture = new Fixture();
 
-            _interbreeder = new Interbreeder();
+            _inputSize = 9;
+            _outputSize = 2;
+            _interbreeder = new Interbreeder(_inputSize,_outputSize);
         }
 
         [Test]
-        public void Test_Interbreed()
+        public void Test_Interbreed_1()
         {
             var a = BuildRedNeuralNetwork();
             var b = BuildBlueNeuralNetwork();
 
             var res = _interbreeder.Interbreed(a, b);
 
+            res.Serialize(@"C:\Temp\graph.graphml");
+        }
+
+        [Test]
+        public void Test_Interbreed_2()
+        {
+            var initSet = new InitNeuroSet(_inputSize, _outputSize).BuildNetworks().Take(2).ToArray();
+
+            var res = _interbreeder.Interbreed(initSet[0], initSet[1]);
+
+            Console.Write(res.ToString());
             res.Serialize(@"C:\Temp\graph.graphml");
         }
 

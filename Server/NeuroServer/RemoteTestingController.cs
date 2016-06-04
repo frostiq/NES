@@ -15,8 +15,6 @@ namespace NeuroServer
 
     public class RemoteTestingController : IRemoteTestingController, IDisposable
     {
-        private const int InputNeuronsCount = 9;
-
         private readonly TimeSpan _timeOfExperiment;
         private readonly ImageManager _imageManager;
         private readonly ILogger _logger;
@@ -63,7 +61,7 @@ namespace NeuroServer
                 case Response.MessageType.Control:
                     {
                         var image = ((ImageRequest)request).Image;
-                        var input = _imageManager.ConvertFromPngToInput(image, InputNeuronsCount);
+                        var input = _imageManager.ConvertFromPngToInput(image, _currentNeuralNetwork.InputCount);
                         input = _imageManager.Normalize(input);
                         var output = _currentNeuralNetwork.Compute(input);
                         response = new Response(

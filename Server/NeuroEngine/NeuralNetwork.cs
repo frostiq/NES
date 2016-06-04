@@ -98,6 +98,20 @@ namespace NeuroEngine
             }
         }
 
+        public bool IsCompliant(int inputSize, int outputSize)
+        {
+            return InputCount >= inputSize && OutputCount >= outputSize;
+        }
+
+        public int InputCount => _inputNeurons.Count;
+
+        public int OutputCount => _outputNeurons.Count;
+
+        public override string ToString()
+        {
+            return $"{Guid}: {InputCount}X{OutputCount}";
+        }
+
         private static void AddSignal(Connection edge)
         {
             edge.Target.AddToInput(edge.Source.Signal * edge.Weight);
