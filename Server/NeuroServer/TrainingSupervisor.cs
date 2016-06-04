@@ -10,10 +10,9 @@ namespace NeuroServer
     public class TrainingSupervisor
     {
         private readonly INeuroRepository _repository;
-
         private readonly IRemoteTestingController _remoteTestingController;
-
         private readonly IInterbreeder _interbreeder;
+        private int n = 1;
 
         public TrainingSupervisor(IInterbreeder interbreeder, INeuroRepository repository, IRemoteTestingController remoteTestingController)
         {
@@ -43,12 +42,13 @@ namespace NeuroServer
 
         private IEnumerable<Tuple<NeuralNetwork, NeuralNetwork>> Select(ICollection<TestResult> testedSet)
         {
-            return testedSet.Select(x => Tuple.Create(x.NeuralNetwork, x.NeuralNetwork));
+            var res = testedSet.OrderByDescending(x => x.Score).Take(2).ToArray();
+            return new []{Tuple.Create(res[0].NeuralNetwork, res[1].NeuralNetwork)};
         }
 
         private bool IsSatisfying(ICollection<TestResult> testedSet)
         {
-            return true;
+            return --n == 0;
         }
 
         private class TestResult

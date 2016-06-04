@@ -9,6 +9,8 @@ namespace Assets.Scripts.Lib
 {
 	public class ServerGates
 	{
+		public int SeriesNumber { get; private set; }
+
 		private readonly TcpClient tcpClient;
 		private readonly ISerializer<Request> reqSerializer = new BinarySerializer ();
 		private readonly ISerializer<Response> respSerializer = new BinarySerializer ();
@@ -20,6 +22,7 @@ namespace Assets.Scripts.Lib
 		public ServerGates ()
 		{
 			tcpClient = new TcpClient () { ReceiveTimeout = 500 };
+			SeriesNumber = 1;
 		}
 
 		public void SendPicture (byte[] data)
@@ -43,6 +46,7 @@ namespace Assets.Scripts.Lib
 				break;
 			case Response.MessageType.Finish:
 				SceneManager.LoadScene (0);
+				SeriesNumber++;
 				break;
 			case Response.MessageType.End:
 				Application.Quit ();

@@ -8,6 +8,7 @@ namespace Assets.Scripts
     public class PlayerController : MonoBehaviour
     {
         public Text CountText;
+		public Text SeriesNumText;
         public Text WinText;
         public Camera Eyes;
 
@@ -35,6 +36,7 @@ namespace Assets.Scripts
             var screenshoot = screenshootMaker.TakeScreenshoot(Eyes);
 			serverGates.UpdateScore (Count);
             serverGates.SendPicture(screenshoot);
+			SeriesNumText.text = "Series number: " + serverGates.SeriesNumber;
         }
 
         void OnTriggerEnter(Collider other)
