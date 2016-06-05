@@ -8,7 +8,7 @@ namespace NeuroEngine.Neurons
 
         private readonly IActivationFunction _activationFunction;
 
-        public BasicNeuron(IActivationFunction activationFunction, string tag = "")
+        public BasicNeuron(IActivationFunction activationFunction, string tag = null)
             : base(tag)
         {
             _activationFunction = activationFunction;

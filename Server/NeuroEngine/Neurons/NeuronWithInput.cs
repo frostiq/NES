@@ -10,9 +10,9 @@ namespace NeuroEngine.Neurons
         [XmlAttribute("tag")]
         public string Tag { get; }
 
-        public NeuronWithInput(string tag = "")
+        public NeuronWithInput(string tag = null)
         {
-            Tag = tag;
+            Tag = tag ?? GetType().Name;
         }
 
         public virtual double Signal => Input;

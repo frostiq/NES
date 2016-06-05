@@ -25,7 +25,7 @@ namespace NeuroServer
             using (var remoteTestingController = new RemoteTestingController(testingTime, new ImageManager(), log))
             using (var server = new TcpServer(52200))
             {
-                var trainingSupervisor = new TrainingSupervisor(new Interbreeder(3, outputSize), null, remoteTestingController);
+                var trainingSupervisor = new TrainingSupervisor(new Interbreeder(2, outputSize), null, remoteTestingController);
 
                 server.OnProcess += bytes =>
                 {

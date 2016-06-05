@@ -30,14 +30,14 @@ namespace NeuroEngine
             _outputNeurons = outputNeurons;
             _inputNeurons = inputNeurons;
 
-            AlphaVertex = new EmptyNeuron();
+            AlphaVertex = new EmptyNeuron("Alpha");
             _network.AddVertex(AlphaVertex);
             foreach (var inputNeuron in _inputNeurons)
             {
                 _network.AddEdge(new Connection(AlphaVertex, inputNeuron, 0d));
             }
 
-            OmegaVertex = new EmptyNeuron();
+            OmegaVertex = new EmptyNeuron("Omega");
             _network.AddVertex(OmegaVertex);
             foreach (var outputNeuron in _outputNeurons)
             {
@@ -87,6 +87,11 @@ namespace NeuroEngine
 
         public IEnumerable<Connection> GetConnections(INeuron neuron)
         {
+            if (_network.ContainsVertex(neuron))
+            {
+                return Enumerable.Empty<Connection>();
+            }
+
             return _network.OutEdges(neuron);
         }
 

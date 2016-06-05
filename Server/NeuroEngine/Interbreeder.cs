@@ -44,8 +44,8 @@ namespace NeuroEngine
                 .OrderBy(x => random.Next())
                 .ForEach(blueQueue.Enqueue);
 
-            alpha = new EmptyNeuron();
-            omega = new EmptyNeuron();
+            alpha = new EmptyNeuron("Alpha");
+            omega = new EmptyNeuron("Omega");
             resultNetwork = new AdjacencyGraph<INeuron, Connection>();
             resultNetwork.AddVertex(alpha);
             resultNetwork.AddVertex(omega);

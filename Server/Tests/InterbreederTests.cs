@@ -24,7 +24,7 @@ namespace Tests
 
             _inputSize = 9;
             _outputSize = 2;
-            _interbreeder = new Interbreeder(_inputSize,_outputSize);
+            _interbreeder = new Interbreeder(0,_outputSize);
         }
 
         [Test]
@@ -43,7 +43,12 @@ namespace Tests
         {
             var initSet = new InitNeuroSet(_inputSize, _outputSize).BuildNetworks().Take(2).ToArray();
 
-            var res = _interbreeder.Interbreed(initSet[0], initSet[1]);
+            NeuralNetwork res = null;
+
+            for (int i = 0; i < 100; i++)
+            {
+                res = _interbreeder.Interbreed(initSet[0], initSet[1]);
+            }
 
             Console.Write(res.ToString());
             res.Serialize(@"C:\Temp\graph.graphml");
